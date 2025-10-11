@@ -232,11 +232,11 @@ export default function Home() {
               rel="noopener noreferrer"
               className="hover:underline transition-all duration-200"
             >
-              @chesayang_kitchen
+              @CheSayang_Kitchen
             </a>
           </h1>
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-            Assalamualaikum, harini kita nak buat...
+            Harini kita nak buat . . .
           </p>
 
           <div className="mb-8">
