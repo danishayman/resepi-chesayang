@@ -17,19 +17,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Resepi Khairul Aming",
-  description: "Koleksi resepi masakan dari Khairul Aming",
+  title: "Resepi Che Sayang Kitchen",
+  description: "Koleksi resepi masakan dari Che Sayang Kitchen",
   openGraph: {
-    title: "Resepi Khairul Aming",
-    description: "Koleksi resepi masakan dari Khairul Aming",
+    title: "Resepi Che Sayang Kitchen",
+    description: "Koleksi resepi masakan dari Che Sayang Kitchen",
     url: "https://www.resepika.my",
-    siteName: "Resepi Khairul Aming",
+    siteName: "Resepi Che Sayang Kitchen",
     images: [
       {
         url: "/preview.png",
         width: 1200,
         height: 630,
-        alt: "Resepi Khairul Aming",
+        alt: "Resepi Che Sayang Kitchen",
       },
     ],
     locale: "ms_MY",
@@ -37,12 +37,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Resepi Khairul Aming",
-    description: "Koleksi resepi masakan Malaysia dari Khairul Aming",
+    title: "Resepi Che Sayang Kitchen",
+    description: "Koleksi resepi masakan Malaysia dari Che Sayang Kitchen",
     images: ["/preview.png"],
   },
   other: {
-    "apple-mobile-web-app-title": "Resepi KA",
+    "apple-mobile-web-app-title": "Che Sayang",
   },
 };
 

@@ -262,7 +262,7 @@ export default function Home() {
       <div className="w-full h-48 md:h-56 lg:h-64 relative overflow-hidden">
         <Image
           src="/banner.png"
-          alt="Khairul Aming Banner"
+          alt="Che Sayang Kitchen Banner"
           fill
           className="object-cover object-bottom"
           priority
@@ -275,16 +275,16 @@ export default function Home() {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             Koleksi Resepi{" "}
             <a
-              href="https://www.tiktok.com/@khairulaming"
+              href="https://www.tiktok.com/@chesayang_kitchen"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:underline transition-all duration-200"
             >
-              @Khairulaming
+              @CheSayangKitchen
             </a>
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
-            Hey what&apos;s up guys!
+            Harini kita nak buat . . .
           </p>
 
           <div className="mb-8">
