@@ -31,10 +31,10 @@ export default function Home() {
   const fetchRecipes = async () => {
     try {
       setLoading(true);
-      
+
       // Try to get from cache first
       const cachedRecipes = recipeCache.get();
-      
+
       if (cachedRecipes && cachedRecipes.length > 0) {
         // Use cached data
         console.log('Using cached recipes');
@@ -42,7 +42,7 @@ export default function Home() {
           const shuffledRecipes = shuffleArray([...cachedRecipes]);
           setAllRecipes(shuffledRecipes);
           setFilteredRecipes(shuffledRecipes);
-          
+
           const firstPage = shuffledRecipes.slice(0, RECIPES_PER_PAGE);
           setDisplayedRecipes(firstPage);
           setHasMore(shuffledRecipes.length > RECIPES_PER_PAGE);
@@ -60,22 +60,22 @@ export default function Home() {
       }
 
       const rawData = data || [];
-      
+
       // Save to cache
       recipeCache.set(rawData);
-      
+
       // Apply shuffling in a separate effect after hydration is complete
       setTimeout(() => {
         const shuffledRecipes = shuffleArray(rawData);
         setAllRecipes(shuffledRecipes);
         setFilteredRecipes(shuffledRecipes);
-        
+
         // Load first page
         const firstPage = shuffledRecipes.slice(0, RECIPES_PER_PAGE);
         setDisplayedRecipes(firstPage);
         setHasMore(shuffledRecipes.length > RECIPES_PER_PAGE);
       }, 0);
-      
+
     } catch (err) {
       console.error("Error fetching recipes:", err);
       setError("Error fetching resepi. Sila cuba lagi.");
@@ -88,16 +88,16 @@ export default function Home() {
     if (loadingMore || !hasMore) return;
 
     setLoadingMore(true);
-    
+
     setTimeout(() => {
       const startIndex = page * RECIPES_PER_PAGE;
       const endIndex = startIndex + RECIPES_PER_PAGE;
-      const recipesToDisplay = searchQuery.trim() 
-        ? filteredRecipes 
+      const recipesToDisplay = searchQuery.trim()
+        ? filteredRecipes
         : allRecipes;
-      
+
       const nextRecipes = recipesToDisplay.slice(startIndex, endIndex);
-      
+
       if (nextRecipes.length > 0) {
         setDisplayedRecipes(prev => [...prev, ...nextRecipes]);
         setPage(prev => prev + 1);
@@ -105,7 +105,7 @@ export default function Home() {
       } else {
         setHasMore(false);
       }
-      
+
       setLoadingMore(false);
     }, 500); // Small delay for smooth loading experience
   }, [page, hasMore, loadingMore, filteredRecipes, allRecipes, searchQuery]);
@@ -167,10 +167,58 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Memuatkan resepi...</p>
+      <div className="animate-pulse">
+        {/* Banner Skeleton */}
+        <div className="w-full h-48 md:h-56 lg:h-64 bg-gray-200"></div>
+
+        <div className="container mx-auto px-4 py-8">
+          {/* Header Section Skeleton */}
+          <div className="text-center mb-8">
+            <div className="h-10 bg-gray-200 rounded w-96 mx-auto mb-4"></div>
+            <div className="h-6 bg-gray-200 rounded w-64 mx-auto mb-8"></div>
+
+            {/* Search Bar Skeleton */}
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="h-12 bg-gray-200 rounded-lg"></div>
+            </div>
+          </div>
+
+          {/* Recipe Grid Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto px-4">
+            {[...Array(RECIPES_PER_PAGE)].map((_, index) => (
+              <div key={index} className="w-80 h-96 mx-auto">
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden h-full flex flex-col">
+                  {/* Image Skeleton */}
+                  <div className="h-70 bg-gray-200 flex-shrink-0"></div>
+
+                  {/* Content Skeleton */}
+                  <div className="p-4 flex-1 flex flex-col min-h-0">
+                    {/* Title */}
+                    <div className="space-y-2 mb-3">
+                      <div className="h-4 bg-gray-200 rounded w-full"></div>
+                      <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    </div>
+
+                    {/* Meta Info */}
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center space-x-4">
+                        <div className="h-4 bg-gray-200 rounded w-16"></div>
+                        <div className="h-4 bg-gray-200 rounded w-12"></div>
+                      </div>
+                      <div className="h-6 bg-gray-200 rounded-full w-20"></div>
+                    </div>
+
+                    {/* Tags */}
+                    <div className="mt-auto flex flex-wrap gap-1">
+                      <div className="h-6 bg-gray-200 rounded-full w-16"></div>
+                      <div className="h-6 bg-gray-200 rounded-full w-20"></div>
+                      <div className="h-6 bg-gray-200 rounded-full w-14"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
