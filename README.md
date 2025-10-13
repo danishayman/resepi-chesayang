@@ -2,7 +2,7 @@
 
 Harini kita nak buat...
 
-A modern recipe collection web app featuring delicious recipes from Malaysian TikTok chef Che Sayang.
+A modern recipe collection web app featuring delicious recipes from Malaysian TikTok chef [Che Sayang](https://www.tiktok.com/@chesayang_kitchen).
 
 ## ✨ Features
 
