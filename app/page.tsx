@@ -6,6 +6,7 @@ import { Recipe } from "@/lib/types";
 import { shuffleArray } from "@/lib/utils";
 import { recipeCache } from "@/lib/cache";
 import FloatingSearch from "@/components/FloatingSearch";
+import RandomButton from "@/components/RandomButton";
 import RecipeCard from "@/components/RecipeCard";
 import Image from "next/image";
 
@@ -287,8 +288,9 @@ export default function Home() {
             Harini kita nak buat . . .
           </p>
 
-          <div className="mb-8">
+          <div className="mb-8 flex flex-col items-center">
             <FloatingSearch onSearch={handleSearch} placeholder="Cari resepi..." />
+            <RandomButton />
           </div>
         </div>
 
