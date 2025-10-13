@@ -5,15 +5,19 @@ import { titleToSlug, formatTime, getThumbnailUrl } from '@/lib/utils'
 
 interface RecipeCardProps {
   recipe: Recipe
+  onTagClick?: (tag: string) => void
+  selectedTags?: string[]
 }
 
-export default function RecipeCard({ recipe }: RecipeCardProps) {
+export default function RecipeCard({ recipe, onTagClick, selectedTags = [] }: RecipeCardProps) {
   const slug = titleToSlug(recipe.title)
   const thumbnailUrl = getThumbnailUrl(recipe.thumbnail_url)
 
+  const hasActiveTag = selectedTags.length > 0 && (recipe.tags || []).some(t => selectedTags.includes(t))
+
   return (
     <Link href={`/resepi/${slug}`} className="group block w-80 h-96 mx-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-200 h-full flex flex-col">
+  <div className={`rounded-lg shadow-sm border overflow-hidden hover:shadow-md hover:-translate-y-1 transition-all duration-200 h-full flex flex-col ${hasActiveTag ? 'bg-slate-700 border-slate-600 ring-2 ring-blue-500/30' : 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'}`}>
         <div className="h-70 relative overflow-hidden flex-shrink-0">
           {thumbnailUrl ? (
             <Image
@@ -83,14 +87,25 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
           
           {recipe.tags && recipe.tags.length > 0 && (
             <div className="mt-auto flex flex-wrap gap-1">
-              {recipe.tags.slice(0, 3).map((tag, index) => (
-                <span
-                  key={index}
-                  className="inline-block px-2 py-1 text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 rounded-full"
-                >
-                  #{tag}
-                </span>
-              ))}
+              {recipe.tags.slice(0, 3).map((tag, index) => {
+                const isActive = selectedTags.includes(tag)
+                return (
+                  <button
+                    key={index}
+                    onClick={(e) => {
+                      // prevent the outer Link navigation
+                      e.preventDefault()
+                      e.stopPropagation()
+                      // call onTagClick if provided
+                      onTagClick?.(tag)
+                    }}
+                    aria-pressed={isActive}
+                    className={`inline-block px-2 py-1 text-xs rounded-full transition-colors transform-gpu active:scale-95 focus:outline-none focus:ring-2 focus:ring-blue-400 ${isActive ? 'bg-blue-600 text-white shadow-md' : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`}
+                  >
+                    #{tag}
+                  </button>
+                )
+              })}
             </div>
           )}
         </div>

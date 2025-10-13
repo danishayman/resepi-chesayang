@@ -394,12 +394,13 @@ export default async function RecipePage({ params }: RecipePageProps) {
               <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Tag</h3>
               <div className="flex flex-wrap gap-2">
                 {recipe.tags.map((tag, index) => (
-                  <span
+                  <a
                     key={index}
-                    className="inline-block px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full"
+                    href={`/?tags=${encodeURIComponent(tag)}`}
+                    className="inline-block px-3 py-1 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full hover:underline"
                   >
                     #{tag}
-                  </span>
+                  </a>
                 ))}
               </div>
             </div>
