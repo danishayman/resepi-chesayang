@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from 'next/navigation'
 import { supabase } from "@/lib/supabase";
 import { Recipe } from "@/lib/types";
 import { shuffleArray } from "@/lib/utils";
@@ -22,12 +23,33 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [selectedTags, setSelectedTags] = useState<string[]>([])
   const observerRef = useRef<IntersectionObserver | null>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const router = useRouter()
 
   useEffect(() => {
     fetchRecipes();
   }, []);
+
+  // sync selectedTags from URL on mount and when history changes (popstate)
+  useEffect(() => {
+    const readTagsFromUrl = () => {
+      try {
+        const params = new URL(window.location.href).searchParams
+        const tagsParam = params.get('tags') || ''
+        const tags = tagsParam ? tagsParam.split(',').filter(Boolean) : []
+        setSelectedTags(tags)
+      } catch {
+        setSelectedTags([])
+      }
+    }
+
+    readTagsFromUrl()
+    const onPop = () => readTagsFromUrl()
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [])
 
   const fetchRecipes = async () => {
     try {
@@ -165,6 +187,44 @@ export default function Home() {
     setPage(1);
     setHasMore(filtered.length > RECIPES_PER_PAGE);
   };
+
+  // toggle a tag in the URL and state
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev => {
+      const exists = prev.includes(tag)
+      const next = exists ? prev.filter(t => t !== tag) : [...prev, tag]
+
+      // update URL (no reload)
+      const url = new URL(window.location.href)
+      if (next.length > 0) url.searchParams.set('tags', next.join(','))
+      else url.searchParams.delete('tags')
+      router.replace(url.pathname + url.search, { scroll: false })
+
+      // also update filteredRecipes immediately to reflect filtering on current data
+      const filtered = next.length === 0 ? allRecipes : allRecipes.filter(r => next.every(t => (r.tags || []).includes(t)))
+      setFilteredRecipes(filtered)
+      const firstPage = filtered.slice(0, RECIPES_PER_PAGE)
+      setDisplayedRecipes(firstPage)
+      setPage(1)
+      setHasMore(filtered.length > RECIPES_PER_PAGE)
+
+      return next
+    })
+  }
+
+  const clearFilters = () => {
+    // remove tags param
+    const url = new URL(window.location.href)
+    url.searchParams.delete('tags')
+    router.replace(url.pathname + url.search, { scroll: false })
+    // reset state
+    setSelectedTags([])
+    setFilteredRecipes(allRecipes)
+    const firstPage = allRecipes.slice(0, RECIPES_PER_PAGE)
+    setDisplayedRecipes(firstPage)
+    setPage(1)
+    setHasMore(allRecipes.length > RECIPES_PER_PAGE)
+  }
 
   if (loading) {
     return (
@@ -361,9 +421,16 @@ export default function Home() {
         {/* Recipe Grid */}
         {displayedRecipes.length > 0 && (
           <>
+            {/* Filter status - minimal */}
+            {selectedTags.length > 0 && (
+              <div className="max-w-5xl mx-auto px-4 mb-4 flex items-center justify-center gap-4">
+                <div className="text-sm text-gray-600 dark:text-gray-300">{displayedRecipes.length} recipe(s) • filters: {selectedTags.join(', ')}</div>
+                <button onClick={clearFilters} className="text-sm underline text-[var(--accent-pink)]">Clear filters</button>
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto px-4">
               {displayedRecipes.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
+                <RecipeCard key={recipe.id} recipe={recipe} onTagClick={toggleTag} selectedTags={selectedTags} />
               ))}
             </div>
 
